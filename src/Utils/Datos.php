@@ -8,7 +8,8 @@ class Datos {
             'image/png',
             'image/jpeg',
             'image/jpg',
-            'image/bmg'
+            'image/bmg',
+            'image/webp'
         ];
     }
 }

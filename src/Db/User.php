@@ -32,12 +32,12 @@ class User extends Conexion {
         }
     }
 
-    public static function read() : array {
-        $q = "select users.*, nombre, color from users,provincias where provincia_id=provincias.id order by users.id desc";
+    public static function read(?int $id = null) : array {
+        $q = ($id === null) ? "select users.*, nombre, color from users,provincias where provincia_id=provincias.id order by users.id desc" : "select users.*, provincias.id as provid from users, provincias where users.id=:i";
         $stmt = parent::getConexion()->prepare($q);
 
         try {
-            $stmt->execute();
+            ($id === null) ? $stmt->execute() : $stmt->execute([':i' => $id]);
         } catch (PDOException $ex) {
             throw new PDOException("Error en el create: " . $ex->getMessage(), -1);
         } finally {
@@ -45,6 +45,56 @@ class User extends Conexion {
         }
 
         return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    public static function getUserById(int $id) : bool | User {
+        $q = "select users.* from users where id=:i";
+
+        $stmt = parent::getConexion()->prepare($q);
+
+        try {
+            $stmt->execute([':i' => $id]);
+        } catch (PDOException $ex) {
+            throw new PDOException("Error en el create: " . $ex->getMessage(), -1);
+        } finally {
+            parent::cerrarConexion();
+        }
+        $stmt -> setFetchMode(PDO::FETCH_CLASS, User::class);
+        $usuario = $stmt->fetch(PDO::FETCH_CLASS, self::class);
+        return (count($usuario)) ? $usuario[0] : false;
+    }
+            
+
+    public static function getImagenById(int $id) : string {
+        $q = "select imagen from users where id=:i";
+        $stmt = parent::getConexion()->prepare($q);
+
+        try {
+            $stmt->execute([':i' => $id]);
+        } catch (PDOException $ex) {
+            throw new PDOException("Error en el getImagenById: " . $ex->getMessage(), -1);
+        } finally {
+            parent::cerrarConexion();
+        }
+        if(!$fila = $stmt->fetch(PDO::FETCH_OBJ)) {
+            return false;
+        }
+        return $fila->imagen;
+    }
+
+    public static function delete(int $id) : void {
+        $q = "delete from users where id=:i";
+        $stmt = parent::getConexion()->prepare($q);
+
+        try {
+            $stmt->execute([
+                ':i' => $id
+            ]);
+        } catch (PDOException $ex) {
+            throw new PDOException("Error en el delete: " . $ex->getMessage(), -1);
+        } finally {
+            parent::cerrarConexion();
+        }
     }
 
     // -----------------------------------------------------

@@ -68,6 +68,7 @@ $usuarios = User::read();
                 </td>
                 <td class="px-6 py-4">
                     <form action="delete.php" method="POST">
+                        <input type="hidden" id="id" name="id" value="<?= $item->id ?>">
                         <a href="update.php?id=<?= $item->id ?>" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
                             <i class="fas fa-edit text-green-500 hover:text-xl"></i>
                         </a>
