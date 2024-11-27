@@ -1,0 +1,21 @@
+{
+    "version" : "1.0.0",
+    "name": "jmmendi/crud5",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "JMMendi",
+            "email": "mendizabaly@gmail.com"
+        }
+    ],
+    "require": {
+        "fakerphp/faker": "^1.24",
+        "vlucas/phpdotenv": "^5.6",
+        "mmo/faker-images": "^0.9.0"
+    }
+}
